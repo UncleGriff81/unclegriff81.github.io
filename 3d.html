@@ -140,29 +140,131 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
         }
-        .card {
+        .project-card {
             background: #111;
             border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            border: 1px solid #222;
+            overflow: hidden;
+            cursor: pointer;
             transition: transform 0.2s, border-color 0.2s;
+            border: 1px solid #222;
         }
-        .card:hover {
+        .project-card:hover {
             transform: translateY(-5px);
             border-color: #ffaa33;
         }
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-        .card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-        .card p {
-            color: #888;
+        .thumbnail {
+            width: 100%;
+            height: 200px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
             font-size: 0.9rem;
+        }
+        .project-card h3 {
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #111;
+            max-width: 900px;
+            width: 90%;
+            margin: 40px auto;
+            border-radius: 16px;
+            border: 1px solid #333;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #888;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+        .close-modal:hover {
+            color: #ffaa33;
+        }
+        .modal-body {
+            padding: 30px;
+        }
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #ffaa33;
+        }
+        .modal-description {
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .media-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .media-item {
+            width: 100%;
+        }
+        .media-item img, .media-item video {
+            width: 100%;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .media-item img {
+            cursor: zoom-in;
+        }
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .fullscreen-overlay.active {
+            display: flex;
+        }
+        .fullscreen-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .fullscreen-content img, .fullscreen-content video {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+        }
+        .close-fullscreen {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
         }
         footer {
             border-top: 1px solid #222;
@@ -182,6 +284,13 @@
             .top-right {
                 justify-content: space-between;
                 width: 100%;
+            }
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+            }
+            .modal-body {
+                padding: 20px;
             }
         }
     </style>
@@ -216,58 +325,65 @@
         <div class="page-title lang-content active-lang" data-lang="ru">3D и Motion Design</div>
         <div class="page-title lang-content" data-lang="en">3D & Motion Design</div>
 
-        <!-- 3D моделирование -->
+        <!-- Раздел 1: 3D моделирование -->
         <div class="section">
             <h2 class="lang-content active-lang" data-lang="ru">3D моделирование</h2>
             <h2 class="lang-content" data-lang="en">3D Modeling</h2>
-            <div class="grid-3cols">
-                <div class="card"><div class="card-icon">🖌️</div><h3>Work 01</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-                <div class="card"><div class="card-icon">🖌️</div><h3>Work 02</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-                <div class="card"><div class="card-icon">🖌️</div><h3>Work 03</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-            </div>
+            <div class="grid-3cols" id="modeling-grid"></div>
         </div>
 
-        <!-- 3D моушен-дизайн -->
+        <!-- Раздел 2: 3D моушен-дизайн -->
         <div class="section">
             <h2 class="lang-content active-lang" data-lang="ru">3D моушен-дизайн</h2>
             <h2 class="lang-content" data-lang="en">3D Motion Design</h2>
-            <div class="grid-3cols">
-                <div class="card"><div class="card-icon">🎬</div><h3>Work 01</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-                <div class="card"><div class="card-icon">🎬</div><h3>Work 02</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-                <div class="card"><div class="card-icon">🎬</div><h3>Work 03</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-            </div>
+            <div class="grid-3cols" id="motion-grid"></div>
         </div>
 
-        <!-- 3D анимация -->
+        <!-- Раздел 3: 3D анимация -->
         <div class="section">
             <h2 class="lang-content active-lang" data-lang="ru">3D анимация</h2>
             <h2 class="lang-content" data-lang="en">3D Animation</h2>
-            <div class="grid-3cols">
-                <div class="card"><div class="card-icon">🎞️</div><h3>Work 01</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-                <div class="card"><div class="card-icon">🎞️</div><h3>Work 02</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-                <div class="card"><div class="card-icon">🎞️</div><h3>Work 03</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-            </div>
+            <div class="grid-3cols" id="animation-grid"></div>
         </div>
 
-        <!-- 3D скульптинг -->
+        <!-- Раздел 4: 3D скульптинг -->
         <div class="section">
             <h2 class="lang-content active-lang" data-lang="ru">3D скульптинг</h2>
             <h2 class="lang-content" data-lang="en">3D Sculpting</h2>
-            <div class="grid-3cols">
-                <div class="card"><div class="card-icon">🗿</div><h3>Work 01</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-                <div class="card"><div class="card-icon">🗿</div><h3>Work 02</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-                <div class="card"><div class="card-icon">🗿</div><h3>Work 03</h3><p class="lang-content active-lang" data-lang="ru">Работа добавится позже</p><p class="lang-content" data-lang="en">Coming soon</p></div>
-            </div>
+            <div class="grid-3cols" id="sculpting-grid"></div>
         </div>
     </main>
 
     <footer><p>© 2026 Dmitry Bobikov / Uncle Griff</p></footer>
 </div>
+
+<!-- Modal -->
+<div id="projectModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body">
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-description">
+                <div class="lang-content active-lang" data-lang="ru" id="modalDescRu"></div>
+                <div class="lang-content" data-lang="en" id="modalDescEn"></div>
+            </div>
+            <div class="media-gallery" id="modalGallery"></div>
+        </div>
+    </div>
+</div>
+
+<div id="fullscreenOverlay" class="fullscreen-overlay">
+    <span class="close-fullscreen">&times;</span>
+    <div class="fullscreen-content" id="fullscreenContent"></div>
+</div>
+
 <script>
+    // Burger menu
     const burger = document.getElementById('burger');
     const navMenu = document.getElementById('navMenu');
     burger.addEventListener('click', () => navMenu.classList.toggle('show'));
 
+    // Language switching
     const langBtns = document.querySelectorAll('.lang-btn');
     const langContents = document.querySelectorAll('.lang-content');
     function setLanguage(lang) {
@@ -280,12 +396,166 @@
             else btn.classList.remove('active');
         });
         localStorage.setItem('siteLang', lang);
+        // Refresh modal if open (optional)
     }
     langBtns.forEach(btn => {
         btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
     });
     const saved = localStorage.getItem('siteLang');
     if(saved === 'ru' || saved === 'en') setLanguage(saved);
+
+    // Projects data (заглушки)
+    const projectsData = {
+        modeling: Array(3).fill().map((_, i) => ({
+            id: `modeling_${i+1}`,
+            titleRu: `Проект моделирования ${i+1}`,
+            titleEn: `Modeling Project ${i+1}`,
+            descRu: `Здесь появится описание проекта 3D моделирования ${i+1}. Будут показаны фото и видео процесса и результата.`,
+            descEn: `Description of modeling project ${i+1} will appear here. Photos and videos of the process and result will be shown.`,
+            media: [{type: 'placeholder', content: 'Медиа добавится позже / Media coming soon'}]
+        })),
+        motion: Array(3).fill().map((_, i) => ({
+            id: `motion_${i+1}`,
+            titleRu: `Моушен-проект ${i+1}`,
+            titleEn: `Motion Project ${i+1}`,
+            descRu: `Здесь появится описание проекта моушен-дизайна ${i+1}.`,
+            descEn: `Description of motion design project ${i+1} will appear here.`,
+            media: [{type: 'placeholder', content: 'Медиа добавится позже / Media coming soon'}]
+        })),
+        animation: Array(3).fill().map((_, i) => ({
+            id: `animation_${i+1}`,
+            titleRu: `Анимационный проект ${i+1}`,
+            titleEn: `Animation Project ${i+1}`,
+            descRu: `Здесь появится описание анимационного проекта ${i+1}.`,
+            descEn: `Description of animation project ${i+1} will appear here.`,
+            media: [{type: 'placeholder', content: 'Медиа добавится позже / Media coming soon'}]
+        })),
+        sculpting: Array(3).fill().map((_, i) => ({
+            id: `sculpting_${i+1}`,
+            titleRu: `Скульптинг проект ${i+1}`,
+            titleEn: `Sculpting Project ${i+1}`,
+            descRu: `Здесь появится описание проекта скульптинга ${i+1}.`,
+            descEn: `Description of sculpting project ${i+1} will appear here.`,
+            media: [{type: 'placeholder', content: 'Медиа добавится позже / Media coming soon'}]
+        }))
+    };
+
+    // Render cards
+    function renderCards() {
+        const modelingGrid = document.getElementById('modeling-grid');
+        const motionGrid = document.getElementById('motion-grid');
+        const animationGrid = document.getElementById('animation-grid');
+        const sculptingGrid = document.getElementById('sculpting-grid');
+        
+        modelingGrid.innerHTML = '';
+        motionGrid.innerHTML = '';
+        animationGrid.innerHTML = '';
+        sculptingGrid.innerHTML = '';
+        
+        projectsData.modeling.forEach((proj, idx) => {
+            modelingGrid.appendChild(createCard(proj, idx));
+        });
+        projectsData.motion.forEach((proj, idx) => {
+            motionGrid.appendChild(createCard(proj, idx));
+        });
+        projectsData.animation.forEach((proj, idx) => {
+            animationGrid.appendChild(createCard(proj, idx));
+        });
+        projectsData.sculpting.forEach((proj, idx) => {
+            sculptingGrid.appendChild(createCard(proj, idx));
+        });
+    }
+    
+    function createCard(project, idx) {
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        card.innerHTML = `
+            <div class="thumbnail">🖼️ Превью проекта</div>
+            <h3>${project.titleRu}</h3>
+        `;
+        card.addEventListener('click', () => openModal(project));
+        return card;
+    }
+    
+    // Modal functions
+    const modal = document.getElementById('projectModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescRu = document.getElementById('modalDescRu');
+    const modalDescEn = document.getElementById('modalDescEn');
+    const modalGallery = document.getElementById('modalGallery');
+    const closeModalBtn = document.querySelector('.close-modal');
+    const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+    const fullscreenContent = document.getElementById('fullscreenContent');
+    const closeFullscreenBtn = document.querySelector('.close-fullscreen');
+    
+    function openModal(project) {
+        modalTitle.textContent = project.titleRu;
+        modalDescRu.textContent = project.descRu;
+        modalDescEn.textContent = project.descEn;
+        
+        modalGallery.innerHTML = '';
+        project.media.forEach(media => {
+            const mediaItem = document.createElement('div');
+            mediaItem.className = 'media-item';
+            if (media.type === 'placeholder') {
+                mediaItem.innerHTML = `<div style="background:#1a1a1a; padding:40px; text-align:center; border-radius:12px;">${media.content}</div>`;
+            } else if (media.type === 'image') {
+                const img = document.createElement('img');
+                img.src = media.content;
+                img.alt = 'Project image';
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openFullscreen(media.content, 'image');
+                });
+                mediaItem.appendChild(img);
+            } else if (media.type === 'video') {
+                const video = document.createElement('video');
+                video.src = media.content;
+                video.controls = true;
+                video.addEventListener('click', (e) => e.stopPropagation());
+                mediaItem.appendChild(video);
+            }
+            modalGallery.appendChild(mediaItem);
+        });
+        modal.classList.add('active');
+    }
+    
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+    
+    function openFullscreen(src, type) {
+        fullscreenContent.innerHTML = '';
+        if (type === 'image') {
+            const img = document.createElement('img');
+            img.src = src;
+            fullscreenContent.appendChild(img);
+        } else if (type === 'video') {
+            const video = document.createElement('video');
+            video.src = src;
+            video.controls = true;
+            video.style.maxWidth = '100%';
+            video.style.maxHeight = '90vh';
+            fullscreenContent.appendChild(video);
+        }
+        fullscreenOverlay.classList.add('active');
+    }
+    
+    function closeFullscreen() {
+        fullscreenOverlay.classList.remove('active');
+        fullscreenContent.innerHTML = '';
+    }
+    
+    closeModalBtn.addEventListener('click', closeModal);
+    closeFullscreenBtn.addEventListener('click', closeFullscreen);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    fullscreenOverlay.addEventListener('click', (e) => {
+        if (e.target === fullscreenOverlay) closeFullscreen();
+    });
+    
+    renderCards();
 </script>
 </body>
 </html>
