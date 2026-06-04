@@ -24,7 +24,6 @@
             padding: 0 20px;
         }
 
-        /* Header */
         header {
             padding: 20px 0;
             border-bottom: 1px solid #222;
@@ -46,7 +45,6 @@
             text-decoration: none;
         }
 
-        /* Desktop Navigation */
         .nav-menu {
             display: flex;
             gap: 30px;
@@ -65,7 +63,6 @@
             color: #ffaa33;
         }
 
-        /* Burger menu - hidden on desktop */
         .burger {
             display: none;
             flex-direction: column;
@@ -80,12 +77,10 @@
             transition: 0.2s;
         }
 
-        /* Mobile nav */
         @media (max-width: 768px) {
             .burger {
                 display: flex;
             }
-
             .nav-menu {
                 display: none;
                 width: 100%;
@@ -96,17 +91,14 @@
                 background-color: #0f0f0f;
                 margin-top: 15px;
             }
-
             .nav-menu.show {
                 display: flex;
             }
-
             .header-inner {
                 flex-wrap: wrap;
             }
         }
 
-        /* Lang switch & contacts */
         .top-right {
             display: flex;
             align-items: center;
@@ -153,7 +145,6 @@
             color: #ffaa33;
         }
 
-        /* Main content */
         .profile {
             display: flex;
             gap: 40px;
@@ -266,9 +257,9 @@
                 <span></span><span></span><span></span>
             </div>
             <ul class="nav-menu" id="navMenu">
-                <li><a href="index.html" class="active">Главная</a></li>
-                <li><a href="3d.html">3D & Motion</a></li>
-                <li><a href="dev.html">Programming</a></li>
+                <li><a href="index.html" class="active"><span class="lang-content active-lang" data-lang="ru">Главная</span><span class="lang-content" data-lang="en">Home</span></a></li>
+                <li><a href="3d.html"><span class="lang-content active-lang" data-lang="ru">3D и Motion</span><span class="lang-content" data-lang="en">3D & Motion</span></a></li>
+                <li><a href="dev.html"><span class="lang-content active-lang" data-lang="ru">Программирование</span><span class="lang-content" data-lang="en">Programming</span></a></li>
             </ul>
         </div>
     </header>
@@ -279,12 +270,10 @@
                 <div class="avatar-circle">ДБ</div>
             </div>
             <div class="info">
-                <!-- Русское имя -->
                 <div class="lang-content active-lang" data-lang="ru">
                     <h1>Дмитрий Бобиков <span class="lastname">/ Uncle Griff</span></h1>
                     <div class="tagline">3D-художник / Motion Designer / Blender</div>
                 </div>
-                <!-- Английское имя -->
                 <div class="lang-content" data-lang="en">
                     <h1>Dmitry Bobikov <span class="lastname">/ Uncle Griff</span></h1>
                     <div class="tagline">3D Artist / Motion Designer / Blender</div>
@@ -292,7 +281,6 @@
             </div>
         </div>
 
-        <!-- БИО: РУССКИЙ -->
         <div class="bio lang-content active-lang" data-lang="ru">
             <p>Меня зовут Дмитрий (Uncle Griff). Я 3D-художник и motion-дизайнер, который находится в начале профессионального пути, но уже сформировал своё визуальное мышление и подход к кадру.</p>
             <p>Моё прошлое, которое помогает мне сейчас — это образование режиссёра театра и давнее увлечение музыкальной группой. Именно они помогли мне понять, что свет, ритм и движение могут рассказывать истории лучше слов.</p>
@@ -303,7 +291,6 @@
             <p>Буду рад интересным задачам, адекватной критике и возможности расти вместе с проектом. Готов к тестовым заданиям.</p>
         </div>
 
-        <!-- БИО: АНГЛИЙСКИЙ (адаптивный, смысловой) -->
         <div class="bio lang-content" data-lang="en">
             <p>My name is Dmitry (Uncle Griff). I'm a 3D artist and motion designer at the start of my professional journey — but I've already developed my own visual thinking and approach to storytelling through imagery.</p>
             <p>What helps me today is my background: a degree in theatre directing and a long‑time passion for playing in a band. That's where I learned that light, rhythm, and motion can tell stories better than words.</p>
@@ -316,19 +303,17 @@
     </main>
 
     <footer>
-        <p>© 2025 Dmitry Bobikov / Uncle Griff</p>
+        <p>© 2026 Dmitry Bobikov / Uncle Griff</p>
     </footer>
 </div>
 
 <script>
-    // Burger menu
     const burger = document.getElementById('burger');
     const navMenu = document.getElementById('navMenu');
     burger.addEventListener('click', () => {
         navMenu.classList.toggle('show');
     });
 
-    // Language switching
     const langBtns = document.querySelectorAll('.lang-btn');
     const langContents = document.querySelectorAll('.lang-content');
 
