@@ -83,4 +83,37 @@
             <h2 class="lang-content" data-lang="en">My Projects</h2>
             <div class="grid-3cols">
                 <div class="card"><div class="card-icon">📱</div><h3>Приложение в Rustore</h3><p class="lang-content active-lang" data-lang="ru">Информация и ссылка добавятся позже</p><p class="lang-content" data-lang="en">Details & link coming soon</p></div>
-                <div class="card"><
+                <div class="card"><div class="card-icon">⚙️</div><h3>Второе приложение</h3><p class="lang-content active-lang" data-lang="ru">Скоро в Rustore</p><p class="lang-content" data-lang="en">Coming soon to Rustore</p></div>
+                <div class="card"><div class="card-icon">🎮</div><h3>Low‑poly головоломка (Unity)</h3><p class="lang-content active-lang" data-lang="ru">В разработке</p><p class="lang-content" data-lang="en">In development</p></div>
+            </div>
+        </div>
+    </main>
+
+    <footer><p>© 2026 Dmitry Bobikov / Uncle Griff</p></footer>
+</div>
+<script>
+    const burger = document.getElementById('burger');
+    const navMenu = document.getElementById('navMenu');
+    burger.addEventListener('click', () => navMenu.classList.toggle('show'));
+
+    const langBtns = document.querySelectorAll('.lang-btn');
+    const langContents = document.querySelectorAll('.lang-content');
+    function setLanguage(lang) {
+        langContents.forEach(c => {
+            if(c.getAttribute('data-lang') === lang) c.classList.add('active-lang');
+            else c.classList.remove('active-lang');
+        });
+        langBtns.forEach(btn => {
+            if(btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        localStorage.setItem('siteLang', lang);
+    }
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
+    });
+    const saved = localStorage.getItem('siteLang');
+    if(saved === 'ru' || saved === 'en') setLanguage(saved);
+</script>
+</body>
+</html>
