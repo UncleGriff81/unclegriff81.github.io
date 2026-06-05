@@ -230,13 +230,22 @@
             flex-direction: column;
             gap: 20px;
         }
+        /* ИСПРАВЛЕНИЕ: теперь фото не обрезаются */
         .media-item {
             width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #0a0a0a;
+            border-radius: 12px;
         }
-        .media-item img, .media-item video {
-            width: 100%;
+        .media-item img, 
+        .media-item video {
+            max-width: 100%;
+            max-height: 70vh;
+            width: auto;
             border-radius: 12px;
             cursor: pointer;
+            object-fit: contain;
         }
         .media-item img {
             cursor: zoom-in;
@@ -260,7 +269,8 @@
             max-width: 90%;
             max-height: 90%;
         }
-        .fullscreen-content img, .fullscreen-content video {
+        .fullscreen-content img, 
+        .fullscreen-content video {
             max-width: 100%;
             max-height: 90vh;
             border-radius: 8px;
@@ -298,6 +308,10 @@
             }
             .modal-body {
                 padding: 20px;
+            }
+            .media-item img,
+            .media-item video {
+                max-height: 50vh;
             }
         }
     </style>
