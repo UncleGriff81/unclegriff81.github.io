@@ -286,7 +286,6 @@
         .media-caption strong {
             color: #ffaa33;
         }
-        /* Полноэкранный режим с подписью поверх */
         .fullscreen-overlay {
             display: none;
             position: fixed;
@@ -485,6 +484,8 @@
             else btn.classList.remove('active');
         });
         localStorage.setItem('siteLang', lang);
+        // Перерисовываем карточки, чтобы обновить названия на текущем языке
+        renderCards();
     }
     langBtns.forEach(btn => {
         btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
@@ -492,10 +493,10 @@
     const saved = localStorage.getItem('siteLang');
     if(saved === 'ru' || saved === 'en') setLanguage(saved);
 
-    let currentCaption = '';
-
     const lowpolyProject = {
         id: 'lowpoly_silence',
+        titleRu: 'Путь к тишине',
+        titleEn: 'The Path to Silence',
         descRu: `
             <div>Серия low-poly сцен, вдохновлённых фэнтези. Изначально планировал создать отдельные low-poly сцены. Но затем захотелось связать их в единую историю. Так получилась серия сцен "Путь к тишине". Я моделировал окружение и предметы в Blender, настраивал свет и цвет через Cycles. Композитинг так же был реализован в Blender. Превью собирал в Photoshop. Основная задача была — создать атмосферу игрушечного, но живого мира.</div>
             <hr class="divider">
@@ -582,7 +583,11 @@
         const card = document.createElement('div');
         card.className = 'project-card';
         
-        const displayTitle = project.titleRu || 'Проект';
+        const currentLang = document.querySelector('.lang-btn.active')?.getAttribute('data-lang') || 'ru';
+        let displayTitle = project.titleRu || 'Проект';
+        if (currentLang === 'en' && project.titleEn) {
+            displayTitle = project.titleEn;
+        }
         
         const thumbnailHtml = project.thumbnail 
             ? `<img src="${project.thumbnail}" alt="thumbnail">`
