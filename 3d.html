@@ -175,7 +175,6 @@
             text-align: center;
             font-size: 1.2rem;
         }
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -333,28 +332,24 @@
         <div class="page-title lang-content active-lang" data-lang="ru">3D и Motion Design</div>
         <div class="page-title lang-content" data-lang="en">3D & Motion Design</div>
 
-        <!-- Раздел 1: 3D моделирование -->
         <div class="section">
             <h2 class="lang-content active-lang" data-lang="ru">3D моделирование</h2>
             <h2 class="lang-content" data-lang="en">3D Modeling</h2>
             <div class="grid-3cols" id="modeling-grid"></div>
         </div>
 
-        <!-- Раздел 2: 3D моушен-дизайн -->
         <div class="section">
             <h2 class="lang-content active-lang" data-lang="ru">3D моушен-дизайн</h2>
             <h2 class="lang-content" data-lang="en">3D Motion Design</h2>
             <div class="grid-3cols" id="motion-grid"></div>
         </div>
 
-        <!-- Раздел 3: 3D анимация -->
         <div class="section">
             <h2 class="lang-content active-lang" data-lang="ru">3D анимация</h2>
             <h2 class="lang-content" data-lang="en">3D Animation</h2>
             <div class="grid-3cols" id="animation-grid"></div>
         </div>
 
-        <!-- Раздел 4: 3D скульптинг -->
         <div class="section">
             <h2 class="lang-content active-lang" data-lang="ru">3D скульптинг</h2>
             <h2 class="lang-content" data-lang="en">3D Sculpting</h2>
@@ -365,7 +360,6 @@
     <footer><p>© 2026 Dmitry Bobikov / Uncle Griff</p></footer>
 </div>
 
-<!-- Modal -->
 <div id="projectModal" class="modal">
     <div class="modal-content">
         <span class="close-modal">&times;</span>
@@ -386,12 +380,10 @@
 </div>
 
 <script>
-    // Burger menu
     const burger = document.getElementById('burger');
     const navMenu = document.getElementById('navMenu');
     burger.addEventListener('click', () => navMenu.classList.toggle('show'));
 
-    // Language switching
     const langBtns = document.querySelectorAll('.lang-btn');
     const langContents = document.querySelectorAll('.lang-content');
     function setLanguage(lang) {
@@ -411,7 +403,7 @@
     const saved = localStorage.getItem('siteLang');
     if(saved === 'ru' || saved === 'en') setLanguage(saved);
 
-    // РЕАЛЬНЫЙ ПРОЕКТ: Low-poly "Путь к тишине"
+    // Реальный проект
     const lowpolyProject = {
         id: 'lowpoly_silence',
         titleRu: 'Путь к тишине',
@@ -419,16 +411,15 @@
         descRu: `Серия low-poly сцен, вдохновлённых фэнтези. Изначально планировал создать отдельные low-poly сцены. Но затем захотелось связать их в единую историю. Так получилась серия сцен "Путь к тишине". Я моделировал окружение и предметы в Blender, настраивал свет и цвет через Cycles. Композитинг так же был реализован в Blender. Превью собирал в Photoshop. Основная задача была — создать атмосферу игрушечного, но живого мира.`,
         descEn: `A series of low-poly scenes inspired by fantasy. Originally planned as separate low-poly scenes, but then I wanted to connect them into a single story. This is how the "Path to Silence" series was born. I modeled the environment and objects in Blender, adjusted lighting and color through Cycles. Compositing was also done in Blender. Thumbnails were assembled in Photoshop. The main goal was to create the atmosphere of a toy-like yet living world.`,
         media: [
-            { type: 'image', src: 'images/lowpoly_world/Scene1.png' },
-            { type: 'image', src: 'images/lowpoly_world/Scene2.png' },
-            { type: 'image', src: 'images/lowpoly_world/Scene3.png' },
-            { type: 'image', src: 'images/lowpoly_world/Scene4.png' },
-            { type: 'image', src: 'images/lowpoly_world/Scene5.png' }
+            { type: 'image', src: 'images/lowpoly_world/Scene1.jpg' },
+            { type: 'image', src: 'images/lowpoly_world/Scene2.jpg' },
+            { type: 'image', src: 'images/lowpoly_world/Scene3.jpg' },
+            { type: 'image', src: 'images/lowpoly_world/Scene4.jpg' },
+            { type: 'image', src: 'images/lowpoly_world/Scene5.jpg' }
         ],
         thumbnail: 'thumbnails/lowpoly_world/thumb.png'
     };
 
-    // Заглушки для остальных проектов
     function createPlaceholderProject(prefix, index) {
         return {
             id: `${prefix}_${index}`,
@@ -441,7 +432,6 @@
         };
     }
 
-    // Собираем данные по разделам
     const modelingProjects = [
         lowpolyProject,
         createPlaceholderProject('modeling', 2),
@@ -466,7 +456,6 @@
         createPlaceholderProject('sculpting', 3)
     ];
 
-    // Рендер карточек
     function renderCards() {
         const modelingGrid = document.getElementById('modeling-grid');
         const motionGrid = document.getElementById('motion-grid');
@@ -500,7 +489,6 @@
         return card;
     }
     
-    // Modal functions
     const modal = document.getElementById('projectModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalDescRu = document.getElementById('modalDescRu');
