@@ -193,12 +193,16 @@
         }
         .modal-content {
             background: #111;
-            max-width: 900px;
+            max-width: 1000px;
             width: 90%;
-            margin: 40px auto;
+            max-height: 90vh;
+            margin: 20px auto;
             border-radius: 16px;
             border: 1px solid #333;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
         .close-modal {
             position: absolute;
@@ -215,11 +219,14 @@
         }
         .modal-body {
             padding: 30px;
+            overflow-y: auto;
+            flex: 1;
         }
         .modal-title {
             font-size: 1.8rem;
             margin-bottom: 15px;
             color: #ffaa33;
+            padding-right: 30px;
         }
         .modal-description {
             margin-bottom: 25px;
@@ -230,7 +237,6 @@
             flex-direction: column;
             gap: 20px;
         }
-        /* ИСПРАВЛЕНИЕ: теперь фото не обрезаются */
         .media-item {
             width: 100%;
             display: flex;
@@ -240,12 +246,9 @@
         }
         .media-item img, 
         .media-item video {
-            max-width: 100%;
-            max-height: 70vh;
-            width: auto;
+            width: 100%;
             border-radius: 12px;
             cursor: pointer;
-            object-fit: contain;
         }
         .media-item img {
             cursor: zoom-in;
@@ -304,14 +307,10 @@
             }
             .modal-content {
                 width: 95%;
-                margin: 20px auto;
+                max-height: 95vh;
             }
             .modal-body {
                 padding: 20px;
-            }
-            .media-item img,
-            .media-item video {
-                max-height: 50vh;
             }
         }
     </style>
@@ -528,6 +527,7 @@
                 const img = document.createElement('img');
                 img.src = media.src;
                 img.alt = 'Project image';
+                img.style.width = '100%';
                 img.addEventListener('click', (e) => {
                     e.stopPropagation();
                     openFullscreen(media.src, 'image');
@@ -537,6 +537,7 @@
                 const video = document.createElement('video');
                 video.src = media.src;
                 video.controls = true;
+                video.style.width = '100%';
                 video.addEventListener('click', (e) => e.stopPropagation());
                 mediaItem.appendChild(video);
             }
