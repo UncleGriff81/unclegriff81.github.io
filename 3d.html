@@ -159,6 +159,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+        }
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .thumbnail-placeholder {
             color: #666;
             font-size: 0.9rem;
         }
@@ -396,7 +404,6 @@
             else btn.classList.remove('active');
         });
         localStorage.setItem('siteLang', lang);
-        // Refresh modal if open (optional)
     }
     langBtns.forEach(btn => {
         btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
@@ -404,43 +411,62 @@
     const saved = localStorage.getItem('siteLang');
     if(saved === 'ru' || saved === 'en') setLanguage(saved);
 
-    // Projects data (заглушки)
-    const projectsData = {
-        modeling: Array(3).fill().map((_, i) => ({
-            id: `modeling_${i+1}`,
-            titleRu: `Проект моделирования ${i+1}`,
-            titleEn: `Modeling Project ${i+1}`,
-            descRu: `Здесь появится описание проекта 3D моделирования ${i+1}. Будут показаны фото и видео процесса и результата.`,
-            descEn: `Description of modeling project ${i+1} will appear here. Photos and videos of the process and result will be shown.`,
-            media: [{type: 'placeholder', content: 'Медиа добавится позже / Media coming soon'}]
-        })),
-        motion: Array(3).fill().map((_, i) => ({
-            id: `motion_${i+1}`,
-            titleRu: `Моушен-проект ${i+1}`,
-            titleEn: `Motion Project ${i+1}`,
-            descRu: `Здесь появится описание проекта моушен-дизайна ${i+1}.`,
-            descEn: `Description of motion design project ${i+1} will appear here.`,
-            media: [{type: 'placeholder', content: 'Медиа добавится позже / Media coming soon'}]
-        })),
-        animation: Array(3).fill().map((_, i) => ({
-            id: `animation_${i+1}`,
-            titleRu: `Анимационный проект ${i+1}`,
-            titleEn: `Animation Project ${i+1}`,
-            descRu: `Здесь появится описание анимационного проекта ${i+1}.`,
-            descEn: `Description of animation project ${i+1} will appear here.`,
-            media: [{type: 'placeholder', content: 'Медиа добавится позже / Media coming soon'}]
-        })),
-        sculpting: Array(3).fill().map((_, i) => ({
-            id: `sculpting_${i+1}`,
-            titleRu: `Скульптинг проект ${i+1}`,
-            titleEn: `Sculpting Project ${i+1}`,
-            descRu: `Здесь появится описание проекта скульптинга ${i+1}.`,
-            descEn: `Description of sculpting project ${i+1} will appear here.`,
-            media: [{type: 'placeholder', content: 'Медиа добавится позже / Media coming soon'}]
-        }))
+    // РЕАЛЬНЫЙ ПРОЕКТ: Low-poly "Путь к тишине"
+    const lowpolyProject = {
+        id: 'lowpoly_silence',
+        titleRu: 'Путь к тишине',
+        titleEn: 'The Path to Silence',
+        descRu: `Серия low-poly сцен, вдохновлённых фэнтези. Изначально планировал создать отдельные low-poly сцены. Но затем захотелось связать их в единую историю. Так получилась серия сцен "Путь к тишине". Я моделировал окружение и предметы в Blender, настраивал свет и цвет через Cycles. Композитинг так же был реализован в Blender. Превью собирал в Photoshop. Основная задача была — создать атмосферу игрушечного, но живого мира.`,
+        descEn: `A series of low-poly scenes inspired by fantasy. Originally planned as separate low-poly scenes, but then I wanted to connect them into a single story. This is how the "Path to Silence" series was born. I modeled the environment and objects in Blender, adjusted lighting and color through Cycles. Compositing was also done in Blender. Thumbnails were assembled in Photoshop. The main goal was to create the atmosphere of a toy-like yet living world.`,
+        media: [
+            { type: 'image', src: 'images/lowpoly_world/Scene1.png' },
+            { type: 'image', src: 'images/lowpoly_world/Scene2.png' },
+            { type: 'image', src: 'images/lowpoly_world/Scene3.png' },
+            { type: 'image', src: 'images/lowpoly_world/Scene4.png' },
+            { type: 'image', src: 'images/lowpoly_world/Scene5.png' }
+        ],
+        thumbnail: 'thumbnails/lowpoly_world/thumb.png'
     };
 
-    // Render cards
+    // Заглушки для остальных проектов
+    function createPlaceholderProject(prefix, index) {
+        return {
+            id: `${prefix}_${index}`,
+            titleRu: `Проект ${index}`,
+            titleEn: `Project ${index}`,
+            descRu: `Здесь появится описание проекта. Фото и видео будут добавлены позже.`,
+            descEn: `Project description will appear here. Photos and videos will be added later.`,
+            media: [{ type: 'placeholder', content: 'Медиа добавится позже / Media coming soon' }],
+            thumbnail: null
+        };
+    }
+
+    // Собираем данные по разделам
+    const modelingProjects = [
+        lowpolyProject,
+        createPlaceholderProject('modeling', 2),
+        createPlaceholderProject('modeling', 3)
+    ];
+    
+    const motionProjects = [
+        createPlaceholderProject('motion', 1),
+        createPlaceholderProject('motion', 2),
+        createPlaceholderProject('motion', 3)
+    ];
+    
+    const animationProjects = [
+        createPlaceholderProject('animation', 1),
+        createPlaceholderProject('animation', 2),
+        createPlaceholderProject('animation', 3)
+    ];
+    
+    const sculptingProjects = [
+        createPlaceholderProject('sculpting', 1),
+        createPlaceholderProject('sculpting', 2),
+        createPlaceholderProject('sculpting', 3)
+    ];
+
+    // Рендер карточек
     function renderCards() {
         const modelingGrid = document.getElementById('modeling-grid');
         const motionGrid = document.getElementById('motion-grid');
@@ -452,25 +478,22 @@
         animationGrid.innerHTML = '';
         sculptingGrid.innerHTML = '';
         
-        projectsData.modeling.forEach((proj, idx) => {
-            modelingGrid.appendChild(createCard(proj, idx));
-        });
-        projectsData.motion.forEach((proj, idx) => {
-            motionGrid.appendChild(createCard(proj, idx));
-        });
-        projectsData.animation.forEach((proj, idx) => {
-            animationGrid.appendChild(createCard(proj, idx));
-        });
-        projectsData.sculpting.forEach((proj, idx) => {
-            sculptingGrid.appendChild(createCard(proj, idx));
-        });
+        modelingProjects.forEach(proj => modelingGrid.appendChild(createCard(proj)));
+        motionProjects.forEach(proj => motionGrid.appendChild(createCard(proj)));
+        animationProjects.forEach(proj => animationGrid.appendChild(createCard(proj)));
+        sculptingProjects.forEach(proj => sculptingGrid.appendChild(createCard(proj)));
     }
     
-    function createCard(project, idx) {
+    function createCard(project) {
         const card = document.createElement('div');
         card.className = 'project-card';
+        
+        const thumbnailHtml = project.thumbnail 
+            ? `<img src="${project.thumbnail}" alt="thumbnail">`
+            : `<div class="thumbnail-placeholder">🖼️ Превью проекта</div>`;
+        
         card.innerHTML = `
-            <div class="thumbnail">🖼️ Превью проекта</div>
+            <div class="thumbnail">${thumbnailHtml}</div>
             <h3>${project.titleRu}</h3>
         `;
         card.addEventListener('click', () => openModal(project));
@@ -501,16 +524,16 @@
                 mediaItem.innerHTML = `<div style="background:#1a1a1a; padding:40px; text-align:center; border-radius:12px;">${media.content}</div>`;
             } else if (media.type === 'image') {
                 const img = document.createElement('img');
-                img.src = media.content;
+                img.src = media.src;
                 img.alt = 'Project image';
                 img.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    openFullscreen(media.content, 'image');
+                    openFullscreen(media.src, 'image');
                 });
                 mediaItem.appendChild(img);
             } else if (media.type === 'video') {
                 const video = document.createElement('video');
-                video.src = media.content;
+                video.src = media.src;
                 video.controls = true;
                 video.addEventListener('click', (e) => e.stopPropagation());
                 mediaItem.appendChild(video);
