@@ -233,11 +233,12 @@
             background: linear-gradient(90deg, transparent, #ffaa33, transparent);
         }
         .epigraph {
+            text-align: right;
             font-style: italic;
             color: #aaa;
-            text-align: center;
             margin: 20px 0;
             font-size: 1rem;
+            line-height: 1.5;
         }
         .project-title-inside {
             font-size: 2rem;
@@ -276,11 +277,16 @@
             font-size: 0.95rem;
             line-height: 1.5;
             color: #ccc;
-            padding: 0 10px;
+            background: rgba(20, 20, 20, 0.8);
+            padding: 12px 16px;
+            border-radius: 10px;
+            border-left: 3px solid #ffaa33;
+            margin-top: 5px;
         }
         .media-caption strong {
             color: #ffaa33;
         }
+        /* Полноэкранный режим с подписью поверх */
         .fullscreen-overlay {
             display: none;
             position: fixed;
@@ -296,23 +302,59 @@
         .fullscreen-overlay.active {
             display: flex;
         }
-        .fullscreen-content {
+        .fullscreen-container {
+            position: relative;
             max-width: 90%;
             max-height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fullscreen-content {
+            max-width: 100%;
+            max-height: 85vh;
         }
         .fullscreen-content img, 
         .fullscreen-content video {
             max-width: 100%;
-            max-height: 90vh;
+            max-height: 85vh;
             border-radius: 8px;
+            display: block;
+        }
+        .fullscreen-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: #fff;
+            padding: 20px 20px 15px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            border-radius: 0 0 8px 8px;
+            text-align: left;
+        }
+        .fullscreen-caption strong {
+            color: #ffaa33;
         }
         .close-fullscreen {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 30px;
             font-size: 2rem;
             cursor: pointer;
             color: white;
+            z-index: 2001;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .close-fullscreen:hover {
+            background: rgba(0,0,0,0.8);
         }
         footer {
             border-top: 1px solid #222;
@@ -342,6 +384,10 @@
             }
             .project-title-inside {
                 font-size: 1.5rem;
+            }
+            .fullscreen-caption {
+                font-size: 0.8rem;
+                padding: 12px 15px;
             }
         }
     </style>
@@ -416,7 +462,10 @@
 
 <div id="fullscreenOverlay" class="fullscreen-overlay">
     <span class="close-fullscreen">&times;</span>
-    <div class="fullscreen-content" id="fullscreenContent"></div>
+    <div class="fullscreen-container">
+        <div class="fullscreen-content" id="fullscreenContent"></div>
+        <div class="fullscreen-caption" id="fullscreenCaption"></div>
+    </div>
 </div>
 
 <script>
@@ -443,10 +492,10 @@
     const saved = localStorage.getItem('siteLang');
     if(saved === 'ru' || saved === 'en') setLanguage(saved);
 
-    // Реальный проект с историей
+    let currentCaption = '';
+
     const lowpolyProject = {
         id: 'lowpoly_silence',
-        // Описание с эпиграфом, названием и подзаголовком
         descRu: `
             <div>Серия low-poly сцен, вдохновлённых фэнтези. Изначально планировал создать отдельные low-poly сцены. Но затем захотелось связать их в единую историю. Так получилась серия сцен "Путь к тишине". Я моделировал окружение и предметы в Blender, настраивал свет и цвет через Cycles. Композитинг так же был реализован в Blender. Превью собирал в Photoshop. Основная задача была — создать атмосферу игрушечного, но живого мира.</div>
             <hr class="divider">
@@ -533,8 +582,7 @@
         const card = document.createElement('div');
         card.className = 'project-card';
         
-        const title = typeof project.titleRu !== 'undefined' ? project.titleRu : (project.descRu ? 'Проект' : 'Проект');
-        const displayTitle = project.titleRu || (project.descRu ? 'Проект' : 'Проект');
+        const displayTitle = project.titleRu || 'Проект';
         
         const thumbnailHtml = project.thumbnail 
             ? `<img src="${project.thumbnail}" alt="thumbnail">`
@@ -554,13 +602,12 @@
     const closeModalBtn = document.querySelector('.close-modal');
     const fullscreenOverlay = document.getElementById('fullscreenOverlay');
     const fullscreenContent = document.getElementById('fullscreenContent');
+    const fullscreenCaption = document.getElementById('fullscreenCaption');
     const closeFullscreenBtn = document.querySelector('.close-fullscreen');
     
     function openModal(project) {
-        // Определяем текущий язык
         const currentLang = document.querySelector('.lang-btn.active')?.getAttribute('data-lang') || 'ru';
         
-        // Устанавливаем описание в зависимости от языка
         if (currentLang === 'ru') {
             modalDescription.innerHTML = project.descRu || 'Описание проекта';
         } else {
@@ -580,11 +627,11 @@
                 img.style.width = '100%';
                 img.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    openFullscreen(media.src, 'image');
+                    const caption = currentLang === 'ru' ? media.captionRu : media.captionEn;
+                    openFullscreen(media.src, 'image', caption);
                 });
                 mediaItem.appendChild(img);
                 
-                // Добавляем подпись, если есть
                 const caption = currentLang === 'ru' ? media.captionRu : media.captionEn;
                 if (caption && caption.trim() !== '') {
                     const captionDiv = document.createElement('div');
@@ -599,14 +646,6 @@
                 video.style.width = '100%';
                 video.addEventListener('click', (e) => e.stopPropagation());
                 mediaItem.appendChild(video);
-                
-                const caption = currentLang === 'ru' ? media.captionRu : media.captionEn;
-                if (caption && caption.trim() !== '') {
-                    const captionDiv = document.createElement('div');
-                    captionDiv.className = 'media-caption';
-                    captionDiv.innerHTML = caption;
-                    mediaItem.appendChild(captionDiv);
-                }
             }
             modalGallery.appendChild(mediaItem);
         });
@@ -617,7 +656,7 @@
         modal.classList.remove('active');
     }
     
-    function openFullscreen(src, type) {
+    function openFullscreen(src, type, caption) {
         fullscreenContent.innerHTML = '';
         if (type === 'image') {
             const img = document.createElement('img');
@@ -628,15 +667,25 @@
             video.src = src;
             video.controls = true;
             video.style.maxWidth = '100%';
-            video.style.maxHeight = '90vh';
+            video.style.maxHeight = '85vh';
             fullscreenContent.appendChild(video);
         }
+        
+        if (caption && caption.trim() !== '') {
+            fullscreenCaption.innerHTML = caption;
+            fullscreenCaption.style.display = 'block';
+        } else {
+            fullscreenCaption.innerHTML = '';
+            fullscreenCaption.style.display = 'none';
+        }
+        
         fullscreenOverlay.classList.add('active');
     }
     
     function closeFullscreen() {
         fullscreenOverlay.classList.remove('active');
         fullscreenContent.innerHTML = '';
+        fullscreenCaption.innerHTML = '';
     }
     
     closeModalBtn.addEventListener('click', closeModal);
