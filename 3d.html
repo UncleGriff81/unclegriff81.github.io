@@ -222,27 +222,46 @@
             overflow-y: auto;
             flex: 1;
         }
-        .modal-title {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: #ffaa33;
-            padding-right: 30px;
-        }
         .modal-description {
             margin-bottom: 25px;
             line-height: 1.6;
         }
+        .divider {
+            margin: 25px 0;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ffaa33, transparent);
+        }
+        .epigraph {
+            font-style: italic;
+            color: #aaa;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1rem;
+        }
+        .project-title-inside {
+            font-size: 2rem;
+            text-align: center;
+            color: #ffaa33;
+            margin: 20px 0 10px;
+        }
+        .project-subtitle {
+            text-align: center;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 30px;
+        }
         .media-gallery {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 30px;
         }
         .media-item {
             width: 100%;
             display: flex;
-            justify-content: center;
-            background: #0a0a0a;
-            border-radius: 12px;
+            flex-direction: column;
+            gap: 10px;
         }
         .media-item img, 
         .media-item video {
@@ -252,6 +271,15 @@
         }
         .media-item img {
             cursor: zoom-in;
+        }
+        .media-caption {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #ccc;
+            padding: 0 10px;
+        }
+        .media-caption strong {
+            color: #ffaa33;
         }
         .fullscreen-overlay {
             display: none;
@@ -311,6 +339,9 @@
             }
             .modal-body {
                 padding: 20px;
+            }
+            .project-title-inside {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -377,11 +408,7 @@
     <div class="modal-content">
         <span class="close-modal">&times;</span>
         <div class="modal-body">
-            <div class="modal-title" id="modalTitle"></div>
-            <div class="modal-description">
-                <div class="lang-content active-lang" data-lang="ru" id="modalDescRu"></div>
-                <div class="lang-content" data-lang="en" id="modalDescEn"></div>
-            </div>
+            <div class="modal-description" id="modalDescription"></div>
             <div class="media-gallery" id="modalGallery"></div>
         </div>
     </div>
@@ -416,19 +443,35 @@
     const saved = localStorage.getItem('siteLang');
     if(saved === 'ru' || saved === 'en') setLanguage(saved);
 
-    // Реальный проект
+    // Реальный проект с историей
     const lowpolyProject = {
         id: 'lowpoly_silence',
-        titleRu: 'Путь к тишине',
-        titleEn: 'The Path to Silence',
-        descRu: `Серия low-poly сцен, вдохновлённых фэнтези. Изначально планировал создать отдельные low-poly сцены. Но затем захотелось связать их в единую историю. Так получилась серия сцен "Путь к тишине". Я моделировал окружение и предметы в Blender, настраивал свет и цвет через Cycles. Композитинг так же был реализован в Blender. Превью собирал в Photoshop. Основная задача была — создать атмосферу игрушечного, но живого мира.`,
-        descEn: `A series of low-poly scenes inspired by fantasy. Originally planned as separate low-poly scenes, but then I wanted to connect them into a single story. This is how the "Path to Silence" series was born. I modeled the environment and objects in Blender, adjusted lighting and color through Cycles. Compositing was also done in Blender. Thumbnails were assembled in Photoshop. The main goal was to create the atmosphere of a toy-like yet living world.`,
+        // Описание с эпиграфом, названием и подзаголовком
+        descRu: `
+            <div>Серия low-poly сцен, вдохновлённых фэнтези. Изначально планировал создать отдельные low-poly сцены. Но затем захотелось связать их в единую историю. Так получилась серия сцен "Путь к тишине". Я моделировал окружение и предметы в Blender, настраивал свет и цвет через Cycles. Композитинг так же был реализован в Blender. Превью собирал в Photoshop. Основная задача была — создать атмосферу игрушечного, но живого мира.</div>
+            <hr class="divider">
+            <div class="epigraph">«Тот, кто уходит, не всегда ищет ответ. <br>Иногда он просто хочет услышать, <br>как тишина звучит в разных мирах.»</div>
+            <div class="project-title-inside">Путь к тишине</div>
+            <div class="project-subtitle">Пять остановок одного маршрута.<br>От камня к костру. От врат к тишине.</div>
+        `,
+        descEn: `
+            <div>A series of low-poly scenes inspired by fantasy. Originally planned as separate low-poly scenes, but then I wanted to connect them into a single story. This is how the "Path to Silence" series was born. I modeled the environment and objects in Blender, adjusted lighting and color through Cycles. Compositing was also done in Blender. Thumbnails were assembled in Photoshop. The main goal was to create the atmosphere of a toy-like yet living world.</div>
+            <hr class="divider">
+            <div class="epigraph">"Those who leave aren't always looking for an answer.<br>Sometimes they just want to hear<br>how silence sounds in different worlds."</div>
+            <div class="project-title-inside">The Path to Silence</div>
+            <div class="project-subtitle">Five stops along the route.<br>From stone to fire. From the gate to silence.</div>
+        `,
         media: [
-            { type: 'image', src: 'images/lowpoly_world/Scene1.jpg' },
-            { type: 'image', src: 'images/lowpoly_world/Scene2.jpg' },
-            { type: 'image', src: 'images/lowpoly_world/Scene3.jpg' },
-            { type: 'image', src: 'images/lowpoly_world/Scene4.jpg' },
-            { type: 'image', src: 'images/lowpoly_world/Scene5.jpg' }
+            { 
+                type: 'image', 
+                src: 'images/lowpoly_world/Scene1.jpg',
+                captionRu: `<strong>1. «Врата предела»</strong><br>...За спиной остался скрежет старых камней. Впереди — только тишина неизвестности, дорога и зелёный свет поляны. Тропа не обещает лёгкого пути, но башня знает: тот, кто вышёл из этих ворот, уже не вернётся прежним...`,
+                captionEn: `<strong>1. "The Gate of Limit"</strong><br>Behind them, the grind of ancient stones faded. Ahead — only the silence of the unknown, the road, and the green light of the meadow. The path doesn't promise an easy journey, but the tower knows: whoever walks through this gate will never return the same...`
+            },
+            { type: 'image', src: 'images/lowpoly_world/Scene2.jpg', captionRu: '', captionEn: '' },
+            { type: 'image', src: 'images/lowpoly_world/Scene3.jpg', captionRu: '', captionEn: '' },
+            { type: 'image', src: 'images/lowpoly_world/Scene4.jpg', captionRu: '', captionEn: '' },
+            { type: 'image', src: 'images/lowpoly_world/Scene5.jpg', captionRu: '', captionEn: '' }
         ],
         thumbnail: 'thumbnails/lowpoly_world/thumb.jpg'
     };
@@ -490,22 +533,23 @@
         const card = document.createElement('div');
         card.className = 'project-card';
         
+        const title = typeof project.titleRu !== 'undefined' ? project.titleRu : (project.descRu ? 'Проект' : 'Проект');
+        const displayTitle = project.titleRu || (project.descRu ? 'Проект' : 'Проект');
+        
         const thumbnailHtml = project.thumbnail 
             ? `<img src="${project.thumbnail}" alt="thumbnail">`
             : `<div class="thumbnail-placeholder">🖼️ Превью проекта</div>`;
         
         card.innerHTML = `
             <div class="thumbnail">${thumbnailHtml}</div>
-            <h3>${project.titleRu}</h3>
+            <h3>${displayTitle}</h3>
         `;
         card.addEventListener('click', () => openModal(project));
         return card;
     }
     
     const modal = document.getElementById('projectModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDescRu = document.getElementById('modalDescRu');
-    const modalDescEn = document.getElementById('modalDescEn');
+    const modalDescription = document.getElementById('modalDescription');
     const modalGallery = document.getElementById('modalGallery');
     const closeModalBtn = document.querySelector('.close-modal');
     const fullscreenOverlay = document.getElementById('fullscreenOverlay');
@@ -513,9 +557,15 @@
     const closeFullscreenBtn = document.querySelector('.close-fullscreen');
     
     function openModal(project) {
-        modalTitle.textContent = project.titleRu;
-        modalDescRu.textContent = project.descRu;
-        modalDescEn.textContent = project.descEn;
+        // Определяем текущий язык
+        const currentLang = document.querySelector('.lang-btn.active')?.getAttribute('data-lang') || 'ru';
+        
+        // Устанавливаем описание в зависимости от языка
+        if (currentLang === 'ru') {
+            modalDescription.innerHTML = project.descRu || 'Описание проекта';
+        } else {
+            modalDescription.innerHTML = project.descEn || 'Project description';
+        }
         
         modalGallery.innerHTML = '';
         project.media.forEach(media => {
@@ -533,6 +583,15 @@
                     openFullscreen(media.src, 'image');
                 });
                 mediaItem.appendChild(img);
+                
+                // Добавляем подпись, если есть
+                const caption = currentLang === 'ru' ? media.captionRu : media.captionEn;
+                if (caption && caption.trim() !== '') {
+                    const captionDiv = document.createElement('div');
+                    captionDiv.className = 'media-caption';
+                    captionDiv.innerHTML = caption;
+                    mediaItem.appendChild(captionDiv);
+                }
             } else if (media.type === 'video') {
                 const video = document.createElement('video');
                 video.src = media.src;
@@ -540,6 +599,14 @@
                 video.style.width = '100%';
                 video.addEventListener('click', (e) => e.stopPropagation());
                 mediaItem.appendChild(video);
+                
+                const caption = currentLang === 'ru' ? media.captionRu : media.captionEn;
+                if (caption && caption.trim() !== '') {
+                    const captionDiv = document.createElement('div');
+                    captionDiv.className = 'media-caption';
+                    captionDiv.innerHTML = caption;
+                    mediaItem.appendChild(captionDiv);
+                }
             }
             modalGallery.appendChild(mediaItem);
         });
